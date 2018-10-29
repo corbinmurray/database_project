@@ -1,10 +1,7 @@
 import sqlite3 
 from datetime import datetime
-<<<<<<< HEAD
 from sqlite3 import Error
-=======
 # from sqlite3 import Error
->>>>>>> 025dcf5cc525a5d43bf9e4d952a8bf8e91d7bd6b
 import requests
 
 class Data:
