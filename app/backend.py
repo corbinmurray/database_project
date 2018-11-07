@@ -1,8 +1,8 @@
 import sqlite3 
 from datetime import datetime
 from sqlite3 import Error
-# from sqlite3 import Error
 import requests
+import pprint
 
 class Data:
 
@@ -172,3 +172,33 @@ class Database:
             print("Error in get_weather")
 
         self.close()
+    
+    def pretty_print(self):
+
+        pp = pprint.PrettyPrinter(indent=4)
+
+        self.open()
+
+        self.curs.execute("SELECT * From Weather")
+
+        [pp.pprint(data) for data in self.curs.fetchall()]
+
+        self.close()
+
+    def get_range_dates(self):
+
+        self.open()
+
+        self.curs.execute("SELECT date From Weather")
+
+        dates = self.curs.fetchall()
+
+        dates = set(dates)
+
+        return dates
+        
+        
+
+        
+        
+        
