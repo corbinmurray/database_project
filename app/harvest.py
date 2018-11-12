@@ -10,7 +10,7 @@ def main():
 
 	if sys.argv[1] == None:
 
-		cities = ["Wichita", "Dallas", "Denver", "Sacramento", "Chicago", "Seattle", "Boston", "Nashville", "Atlanta", "Miami"]
+		cities = ["Wichita", "Denver", "Chicago", "Miami"]
 
 		for city in cities:
 			obj = backend.Data(city_name=city)
