@@ -166,7 +166,7 @@ class Database:
 
         try:
             self.curs.execute(sql_command, (city_name,user_date) )
-            return self.curs.fetchall()
+            return self.curs.fetchall()[0]
         except Exception as e:
             print(e, "\n\n")
             print("Error in get_weather")
@@ -174,28 +174,28 @@ class Database:
         self.close()
     
     def pretty_print(self):
-
         pp = pprint.PrettyPrinter(indent=4)
-
         self.open()
-
         self.curs.execute("SELECT * From Weather")
-
         [pp.pprint(data) for data in self.curs.fetchall()]
-
         self.close()
 
     def get_range_dates(self):
-
         self.open()
-
         self.curs.execute("SELECT date From Weather")
-
         dates = self.curs.fetchall()
-
         dates = set(dates)
-
+        self.close()
         return dates
+    
+    def getCoord(self, user_city):
+        self.open()
+        string = "SELECT coord FROM Weather WHERE city = (?)"
+        self.curs.execute(string, (user_city))
+        temp = self.curs.fetchall()
+        self.close()
+        return temp
+
         
         
 
