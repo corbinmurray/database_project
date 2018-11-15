@@ -10,7 +10,7 @@ def main():
 
 	if sys.argv[1] == None:
 
-		cities = ["Wichita", "Denver", "Chicago", "Miami"]
+		cities = ["Wichita", "Chicago", "Miami"]
 
 		for city in cities:
 			obj = backend.Data(city_name=city)
@@ -22,10 +22,6 @@ def main():
 		print(database.get_range_dates())
 
 
-
-
-	
-		
 
 if __name__ == "__main__":
     main()
