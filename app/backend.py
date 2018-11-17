@@ -180,13 +180,30 @@ class Database:
         [pp.pprint(data) for data in self.curs.fetchall()]
         self.close()
 
-    def get_range_dates(self):
-        self.open()
-        self.curs.execute("SELECT date From Weather")
-        dates = self.curs.fetchall()
-        dates = set(dates)
-        self.close()
-        return dates
+    # def get_range_dates(self):
+    #     self.open()
+    #     self.curs.execute("SELECT date From Weather")
+    #     dates = list(set(self.curs.fetchall()))
+    #     self.close()
+
+    #     temp = dates.copy()
+    #     dates.clear()
+
+    #     [dates.append(element[0]) for element in temp]
+
+    #     dates.sort()
+    #     print(dates)
+
+    #     dates.insert(1, dates[11])
+    #     dates.insert(2, dates[22])
+
+        
+    #     # [print(element) for element in dates]
+    #     # print("Dates: ", dates, "\n", "Type: ", type(dates), "\n\n")
+    #     # print("Type of each element: ", type(dates[0][0]))
+    #     # dates = set(sorted(dates))
+        
+    #     return dates
     
     def getCoord(self, user_city):
         self.open()
