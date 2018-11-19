@@ -102,7 +102,7 @@ class SecondPage(tkinter.Frame):
 
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 15), relief = "sunken", command = lambda: master.switchFrames(HomePage))
-        self.back.grid(row = 7, column = 3)
+        self.back.grid(row = 7, column = 2)
 
         self.columnconfigure(index = 6, weight = 2)
         self.rowconfigure(index = 6, weight = 1)
