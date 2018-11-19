@@ -125,6 +125,14 @@ class SecondPage(tkinter.Frame):
     def __init__(self, master):
         tkinter.Frame.__init__(self, master=master)
 
+        """ Inserting Image """
+        
+        fname = "../images/snowy.gif"
+        photo = tkinter.PhotoImage(file=fname)
+
+        test_label = tkinter.Label(master=self, image=photo)
+        test_label.place(in_=self, x=0, y=0, relx=1, rely=1)
+
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 17), relief = "sunken", command = lambda: master.switchFrames(HomePage))
         self.back.grid(row = 7, column = 2)
