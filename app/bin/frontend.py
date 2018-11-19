@@ -1,11 +1,7 @@
 import backend
 import tkinter
 import ast
-<<<<<<< HEAD
 import PIL
-=======
-# import pillow
->>>>>>> 8b684bfa4478ceced67870c1527581a3ae501fe9
 
 class WeatherApp(tkinter.Tk):
 
@@ -129,6 +125,28 @@ class SecondPage(tkinter.Frame):
     def __init__(self, master):
         tkinter.Frame.__init__(self, master=master)
 
+        # self.background_frame = tkinter.Frame(master=self)
+        # self.background_frame.grid(row=10, column=0)
+
+
+
+
+        """ Inserting Image into GUI """
+        from PIL import Image, ImageTk
+
+
+        img = ImageTk.PhotoImage(Image.open("../images/Sunny.jpg"))
+        img = t
+
+        # img = Image.open("../images/Clouds.jpg")
+        # ptImg = ImageTk.PhotoImage(img)
+
+        # test = tkinter.PhotoImage()
+
+        self.practice = tkinter.Label(master=self, image=img)
+        self.practice.place(x=0, y=0, relwidth=1, relheight=1)
+
+
 
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 17), relief = "sunken", command = lambda: master.switchFrames(HomePage))
@@ -220,12 +238,6 @@ class SecondPage(tkinter.Frame):
         self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 16))
         self._windDeg.grid(row = 5, column = 1, padx = 20)
 
-        from PIL import Image, ImageTk
-
-        img = Image.open("../images/practice.jpg")
-        ptImg = ImageTk.PhotoImage(img)
-        self.practice = tkinter.Label(master=self, image=ptImg, height=150, width=150)
-        self.practice.grid(row=0, column=10)
 
 
 test = WeatherApp(window_name="Fiesta Weather", window_size="800x350")
