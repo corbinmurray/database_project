@@ -1,6 +1,7 @@
 import backend
 import tkinter
 import ast
+import pillow
 
 class WeatherApp(tkinter.Tk):
 
@@ -214,6 +215,9 @@ class SecondPage(tkinter.Frame):
         _windDeg = "Wind Direction: {_deg}".format(_deg = direction)
         self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 14))
         self._windDeg.grid(row = 5, column = 1)
+
+
+        img = pillow.ImageTk.PhotoImage(pillow.Image.open("data/test.jpg"))
 
 
 # test = WeatherApp(window_name="Fiesta Weather", window_size="700x300")
