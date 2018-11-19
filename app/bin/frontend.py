@@ -1,7 +1,7 @@
 import backend
 import tkinter
 import ast
-import pillow
+import PIL
 
 class WeatherApp(tkinter.Tk):
 
@@ -12,7 +12,7 @@ class WeatherApp(tkinter.Tk):
         self.op_list = ["10-1-2018", "Wichita"]
 
     
-        self.database = backend.Database("data/weather.db")
+        self.database = backend.Database("../data/weather.db")
 
         tkinter.Tk.__init__(self)
 
@@ -216,8 +216,12 @@ class SecondPage(tkinter.Frame):
         self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 14))
         self._windDeg.grid(row = 5, column = 1)
 
+        from PIL import Image, ImageTk
 
-        img = pillow.ImageTk.PhotoImage(pillow.Image.open("data/test.jpg"))
+        img = Image.open("../images/practice.jpg")
+        ptImg = ImageTk.PhotoImage(img)
+        self.practice = tkinter.Label(master=self, image=ptImg, height=150, width=150)
+        self.practice.grid(row=0, column=10)
 
 
 # test = WeatherApp(window_name="Fiesta Weather", window_size="700x300")
