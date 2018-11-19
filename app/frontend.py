@@ -1,52 +1,58 @@
 import backend
 import tkinter
 import ast
+import pillow
 
 class WeatherApp(tkinter.Tk):
 
     def __init__(self, window_name, window_size):
 
+        self.city = None
+        self.date = None
+        self.op_list = ["10-1-2018", "Wichita"]
+
+    
         self.database = backend.Database("data/weather.db")
 
         tkinter.Tk.__init__(self)
 
+        self.frame = HomePage(master=self)
+        self.frame.pack(fill="both", expand=True)
+
         self.title(window_name)
-        self.geometry(window_size)
+        self.geometry(window_size)  
 
-        self.frame = None
-
-        
-        self.first = HomePage(master=self)
-        self.second = SecondPage(master=self)
-        
-        self.switchFrames(HomePage)
-
-        # frame = HomePage(master=self)
-
-        # self.frames.append(frame)
-
-        # self.frames[0].pack(fill="both", expand=True)
-
-        # frameTwo = SecondPage(master = self)
-        # self.frames.append(frameTwo)
+        # self.switchFrames(HomePage)
 
     def switchFrames(self, frame):
+
+
+        if frame is SecondPage:
+            try:
+                self.op_list = self.frame.test
+            except AttributeError:
+                pass
+
+
+        self.frame.destroy()
+
+
         initFrame = frame(master=self)
-        if self.frame is not None:
-            self.frame.destroy()
         self.frame = initFrame
         self.frame.pack(fill="both", expand=True)
 
 
     def getCity(self):
-        self.city = self.first.getSpinboxCity()
-        return self.city
+        # self.city = self.first.getSpinboxCity()
+        return self.op_list[1]
+
     def getDate(self):
-        self.date = self.first.getSpinboxDate()
-        return self.date
+        # self.date = self.first.getSpinboxDate()
+        return self.op_list[0]
 
+    def getop(self):
+        return self.op_list
 
-        
     def run(self):
         self.mainloop()
 
@@ -66,39 +72,59 @@ class HomePage(tkinter.Frame):
         self.rowconfigure(index = 6, weight = 2)
 
 
-        self.home_label = tkinter.Label(master=self, text="Welcome to Weather Finder", justify = "center", font = ("Tahoma", 18))
+        self.home_label = tkinter.Label(master=self, text="Welcome to Weather Finder", justify = "center", font = ("Tahoma", 18), bg="#42f4e5")
         self.home_label.grid(row=0, column=2, pady = 20)
 
-        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 16))
+        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 16), bg="#42f4e5")
         self.city_label.grid(row = 2, column = 1)
 
-        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 16))
+        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 16), bg="#42f4e5")
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
         self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 16), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
         self.run_button.grid(row = 5, column = 2, pady = 20)
 
-        selectCity = ("Denver", "Wichita", "Chicago", "Miami")
+        selectCity = ("Wichita", "Chicago", "Miami")
         self.cities = tkinter.Spinbox(master = self, values = selectCity, font = ("Tahoma", 14))
         self.cities.grid(row = 3, column = 1)
 
         
-        
-        #selectDate = ("Mackenzie", "Mckenzie", "McKenzie", "Mac", "Cheese", "mmmm")
-        self.date = tkinter.Spinbox(master = self, values = tuple(master.database.get_range_dates()), font = ("Tahoma", 14))
+        """ Creating List of dates, less complicated than trying to generate from database """
+        date_list = []
+
+        date_string = "{_month}-{_day}-2018"
+
+        for month in range(10,12):        
+            for day in range(1, 32):
+                if month == 11 and day == 31:
+                    break
+                else:
+                    date_list.append(date_string.format(_month=month, _day=day))
+
+        self.date = tkinter.Spinbox(master = self, values = tuple(date_list), font = ("Tahoma", 14))
         self.date.grid (row = 3, column = 3)
 
-    def getSpinboxDate(self):
-        return self.date.get()
+        self.cities.bind("<Leave>", self.update_current_spinbox_data)
+        self.date.bind("<Leave>", self.update_current_spinbox_data)
+
+
+    # def getSpinboxDate(self):
+    #     print("From getSpinboxDate: ", self.date.get())
+    #     return self.date.get()
         
-    def getSpinboxCity(self):
-        return self.cities.get()
+    # def getSpinboxCity(self):
+    #     print("From getSpinboxCity: ", self.cities.get())
+    #     return self.cities.get()
+
+    def update_current_spinbox_data(self, event):
+        self.test = [self.date.get(), self.cities.get()]
 
 
 class SecondPage(tkinter.Frame):
 
     def __init__(self, master):
         tkinter.Frame.__init__(self, master=master)
+
 
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 15), relief = "sunken", command = lambda: master.switchFrames(HomePage))
@@ -109,9 +135,12 @@ class SecondPage(tkinter.Frame):
         self.rowconfigure(index = 8, weight = 2)
 
         """SHOWS TITLE"""
+        
         weatherString = "Weather for {city} on {date}".format(city = master.getCity(), date = master.getDate())
-        self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 18))
-        self.title_label.grid(row = 0, column = 2, pady = 10)
+        
+
+        self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 18), padx=10, pady=10)
+        self.title_label.grid(row = 0, column = 2, pady=10, padx=10)
 
         user_city = master.getCity()
         _date = master.getDate()
@@ -125,7 +154,7 @@ class SecondPage(tkinter.Frame):
 
         self.columnconfigure(index = 0, weight = 2)
 
-        # print(weather)
+        # # # print(weather)
 
         """SHOWS COORDINATES"""
         coordString = "Coordinates ({la}, {lo})".format(la = lat, lo = lon)
@@ -134,7 +163,7 @@ class SecondPage(tkinter.Frame):
 
         condition = weather[3]
         condition = ast.literal_eval(weather[3])
-        condition = condition["main"]
+        condition = condition["description"]
 
         """SHOWS WEATHER DESCRIPTION"""
         descString = "Weather Description: {description}".format(description = condition)
@@ -153,19 +182,19 @@ class SecondPage(tkinter.Frame):
         ave_temp = weather[5]
         tempString = "Average temperature: {temp} \u00b0F".format(temp = ave_temp)
         self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 14))
-        self.average.grid(row = 2, column = 3)
+        self.average.grid(row = 3, column = 3)
 
         """SHOWS MIN TEMP"""
         min_temp = weather[6]
         mintempString = "Minimum temperature: {min} \u00b0F".format(min = min_temp)
         self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 14))
-        self.minimum.grid(row = 3, column = 3)
+        self.minimum.grid(row = 4, column = 3)
 
         """SHOWS MAX TEMP"""
-        max_temp = weather[6]
+        max_temp = weather[7]
         maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp, )
         self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 14))
-        self.maximum.grid(row = 4, column = 3)
+        self.maximum.grid(row = 2, column = 3)
 
         """SHOWS WIND SPEED"""
         windDes = weather[10]
@@ -188,6 +217,9 @@ class SecondPage(tkinter.Frame):
         self._windDeg.grid(row = 5, column = 1)
 
 
-test = WeatherApp(window_name="Fiesta Weather", window_size="700x300")
+        img = pillow.ImageTk.PhotoImage(pillow.Image.open("data/test.jpg"))
 
+
+# test = WeatherApp(window_name="Fiesta Weather", window_size="700x300")
+test = WeatherApp(window_name="Fiesta Weather", window_size="900x500")
 test.run()
