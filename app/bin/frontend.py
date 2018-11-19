@@ -125,29 +125,6 @@ class SecondPage(tkinter.Frame):
     def __init__(self, master):
         tkinter.Frame.__init__(self, master=master)
 
-        # self.background_frame = tkinter.Frame(master=self)
-        # self.background_frame.grid(row=10, column=0)
-
-
-
-
-        """ Inserting Image into GUI """
-        from PIL import Image, ImageTk
-
-
-        img = ImageTk.PhotoImage(Image.open("../images/Sunny.jpg"))
-        img = t
-
-        # img = Image.open("../images/Clouds.jpg")
-        # ptImg = ImageTk.PhotoImage(img)
-
-        # test = tkinter.PhotoImage()
-
-        self.practice = tkinter.Label(master=self, image=img)
-        self.practice.place(x=0, y=0, relwidth=1, relheight=1)
-
-
-
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 17), relief = "sunken", command = lambda: master.switchFrames(HomePage))
         self.back.grid(row = 7, column = 2)
