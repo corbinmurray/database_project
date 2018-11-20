@@ -1,7 +1,7 @@
 import backend
 import tkinter
 import ast
-import pillow
+import PIL
 
 class WeatherApp(tkinter.Tk):
 
@@ -12,7 +12,7 @@ class WeatherApp(tkinter.Tk):
         self.op_list = ["10-1-2018", "Wichita"]
 
     
-        self.database = backend.Database("data/weather.db")
+        self.database = backend.Database("../data/weather.db")
 
         tkinter.Tk.__init__(self)
 
@@ -72,20 +72,20 @@ class HomePage(tkinter.Frame):
         self.rowconfigure(index = 6, weight = 2)
 
 
-        self.home_label = tkinter.Label(master=self, text="Welcome to Weather Finder", justify = "center", font = ("Tahoma", 18), bg="#42f4e5")
+        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20), bg="#42f4e5")
         self.home_label.grid(row=0, column=2, pady = 20)
 
-        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 16), bg="#42f4e5")
+        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18), bg="#42f4e5")
         self.city_label.grid(row = 2, column = 1)
 
-        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 16), bg="#42f4e5")
+        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18), bg="#42f4e5")
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
-        self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 16), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
+        self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
         self.run_button.grid(row = 5, column = 2, pady = 20)
 
         selectCity = ("Wichita", "Chicago", "Miami")
-        self.cities = tkinter.Spinbox(master = self, values = selectCity, font = ("Tahoma", 14))
+        self.cities = tkinter.Spinbox(master = self, values = selectCity, font = ("Tahoma", 16))
         self.cities.grid(row = 3, column = 1)
 
         
@@ -125,10 +125,17 @@ class SecondPage(tkinter.Frame):
     def __init__(self, master):
         tkinter.Frame.__init__(self, master=master)
 
+        """ Inserting Image """
+        
+        fname = "../images/snowy.gif"
+        photo = tkinter.PhotoImage(file=fname)
+
+        test_label = tkinter.Label(master=self, image=photo)
+        test_label.place(in_=self, x=0, y=0, relx=1, rely=1)
 
         """BACK BUTTON"""
-        self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 15), relief = "sunken", command = lambda: master.switchFrames(HomePage))
-        self.back.grid(row = 7, column = 3)
+        self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 17), relief = "sunken", command = lambda: master.switchFrames(HomePage))
+        self.back.grid(row = 7, column = 2)
 
         self.columnconfigure(index = 6, weight = 2)
         self.rowconfigure(index = 6, weight = 1)
@@ -139,8 +146,8 @@ class SecondPage(tkinter.Frame):
         weatherString = "Weather for {city} on {date}".format(city = master.getCity(), date = master.getDate())
         
 
-        self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 18), padx=10, pady=10)
-        self.title_label.grid(row = 0, column = 2, pady=10, padx=10)
+        self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 17))
+        self.title_label.grid(row = 0, column = 2, pady=10)
 
         user_city = master.getCity()
         _date = master.getDate()
@@ -158,7 +165,7 @@ class SecondPage(tkinter.Frame):
 
         """SHOWS COORDINATES"""
         coordString = "Coordinates ({la}, {lo})".format(la = lat, lo = lon)
-        self.coord_label = tkinter.Label(master = self, text = coordString, font = ("Tahoma", 12))
+        self.coord_label = tkinter.Label(master = self, text = coordString, font = ("Tahoma", 14))
         self.coord_label.grid(row = 1, column = 2)
 
         condition = weather[3]
@@ -167,34 +174,34 @@ class SecondPage(tkinter.Frame):
 
         """SHOWS WEATHER DESCRIPTION"""
         descString = "Weather Description: {description}".format(description = condition)
-        self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 14))
-        self.description.grid(row = 2, column = 1)
+        self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 16))
+        self.description.grid(row = 2, column = 1, padx = 20)
 
         """SHOWS VISABILITY"""
         vis = weather[4]
         visString = "Visability: {show_vis} miles".format(show_vis = vis)
-        self.visability = tkinter.Label(master = self, text = visString, font = ("Tahoma", 14))
-        self.visability.grid(row = 3, column = 1)
+        self.visability = tkinter.Label(master = self, text = visString, font = ("Tahoma", 16))
+        self.visability.grid(row = 3, column = 1, padx = 20)
 
         self.columnconfigure(index = 2, weight = 2)
 
         """SHOWS TEMPERATURE"""
         ave_temp = weather[5]
         tempString = "Average temperature: {temp} \u00b0F".format(temp = ave_temp)
-        self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 14))
-        self.average.grid(row = 3, column = 3)
+        self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 16))
+        self.average.grid(row = 2, column = 3, pady = 5, padx = 20)
 
         """SHOWS MIN TEMP"""
         min_temp = weather[6]
         mintempString = "Minimum temperature: {min} \u00b0F".format(min = min_temp)
-        self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 14))
-        self.minimum.grid(row = 4, column = 3)
+        self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 16))
+        self.minimum.grid(row = 3, column = 3, pady = 5)
 
         """SHOWS MAX TEMP"""
         max_temp = weather[7]
         maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp, )
-        self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 14))
-        self.maximum.grid(row = 2, column = 3)
+        self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 16))
+        self.maximum.grid(row = 4, column = 3, pady = 5)
 
         """SHOWS WIND SPEED"""
         windDes = weather[10]
@@ -209,17 +216,15 @@ class SecondPage(tkinter.Frame):
 
         # print(direction)
         _windSpeed = "Wind Speed: {_wind} mph".format(_wind = speed)
-        self._windspeed = tkinter.Label(master = self, text = _windSpeed, font = ("Tahoma", 14))
-        self._windspeed.grid(row = 4, column = 1)
+        self._windspeed = tkinter.Label(master = self, text = _windSpeed, font = ("Tahoma", 16))
+        self._windspeed.grid(row = 4, column = 1, padx = 20)
 
         _windDeg = "Wind Direction: {_deg}".format(_deg = direction)
-        self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 14))
-        self._windDeg.grid(row = 5, column = 1)
+        self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 16))
+        self._windDeg.grid(row = 5, column = 1, padx = 20)
 
 
-        img = pillow.ImageTk.PhotoImage(pillow.Image.open("data/test.jpg"))
 
-
-# test = WeatherApp(window_name="Fiesta Weather", window_size="700x300")
-test = WeatherApp(window_name="Fiesta Weather", window_size="900x500")
+test = WeatherApp(window_name="Fiesta Weather", window_size="800x350")
+# test = WeatherApp(window_name="Fiesta Weather", window_size="900x500")
 test.run()
