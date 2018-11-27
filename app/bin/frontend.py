@@ -128,8 +128,6 @@ class SecondPage(tkinter.Frame):
         condition = ast.literal_eval(self.weather[3])
         condition = condition["description"]
 
-        print("*"*10, "\n", condition, "\n", "*"*10)
-
         self.insert_image(condition)
 
         self.add_widgets_colorized(condition)
