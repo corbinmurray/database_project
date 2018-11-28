@@ -71,14 +71,22 @@ class HomePage(tkinter.Frame):
         self.rowconfigure(index = 7, weight = 1)
         self.rowconfigure(index = 6, weight = 2)
 
+        self.fname = "../images/party.gif"
 
-        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20), bg="#42f4e5")
+        self.photo = tkinter.PhotoImage(file=self.fname)
+
+        self.test_label = tkinter.Label(master=self, image=self.photo)
+        self.test_label.image = self.photo
+        self.test_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+
+        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20))
         self.home_label.grid(row=0, column=2, pady = 20)
 
-        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18), bg="#42f4e5")
+        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18))
         self.city_label.grid(row = 2, column = 1)
 
-        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18), bg="#42f4e5")
+        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18))
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
         self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
@@ -146,9 +154,9 @@ class SecondPage(tkinter.Frame):
         
         if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
             self.fname = "../images/{description}.gif".format(description="clouds")
-        elif weather_condition == "Rainy" or weather_condition == "Rain":
+        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "Light Rain":
             self.fname = "../images/{description}.gif".format(description="raining")
-        elif weather_condition == "Snowy" or weather_condition == "Snow":
+        elif weather_condition == "Snowy" or weather_condition == "Snow" or weather_condition == "light snow":
             self.fname = "../images/{description}.gif".format(description="snowy")
         else:
             self.fname = "../images/{description}.gif".format(description="sunny")
@@ -174,7 +182,7 @@ class SecondPage(tkinter.Frame):
             header = hex_color["header"]
             body = hex_color["body"]
             
-        elif weather_condition == "Snowy" or weather_condition == "Snow":
+        elif weather_condition == "Snowy" or weather_condition == "Snow" or weather_condition == "light snow":
             hex_color = self.color_dict["snowyGIF"]
             
         else:
