@@ -71,14 +71,22 @@ class HomePage(tkinter.Frame):
         self.rowconfigure(index = 7, weight = 1)
         self.rowconfigure(index = 6, weight = 2)
 
+        self.fname = "../images/party.gif"
 
-        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20), bg="#42f4e5")
+        self.photo = tkinter.PhotoImage(file=self.fname)
+
+        self.test_label = tkinter.Label(master=self, image=self.photo)
+        self.test_label.image = self.photo
+        self.test_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+
+        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20))
         self.home_label.grid(row=0, column=2, pady = 20)
 
-        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18), bg="#42f4e5")
+        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18))
         self.city_label.grid(row = 2, column = 1)
 
-        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18), bg="#42f4e5")
+        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18))
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
         self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
@@ -119,8 +127,8 @@ class SecondPage(tkinter.Frame):
         """ This is the background color list of our jpgs """
         self.color_dict = {"snowyGIF": "#01ABF5", "cloudsGIF": {"header": "#878787", "body": "#141414"}, "rainingGIF": {"header": "#878787", "body": "#141414"}, "sunnyGIF": "#FEC327"}
         
-        # user_city = master.getCity()
-        # _date = master.getDate()
+        self._user_city = master.getCity()
+        self._user_date = master.getDate()
 
         self.weather = master.database.get_weather(city_name=master.getCity(), user_date=master.getDate())
         
@@ -144,11 +152,11 @@ class SecondPage(tkinter.Frame):
  
     def insert_image(self, weather_condition):
         
-        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast":
+        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
             self.fname = "../images/{description}.gif".format(description="clouds")
-        elif weather_condition == "Rainy" or weather_condition == "Rain":
+        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "Light Rain":
             self.fname = "../images/{description}.gif".format(description="raining")
-        elif weather_condition == "Snowy" or weather_condition == "Snow":
+        elif weather_condition == "Snowy" or weather_condition == "Snow" or weather_condition == "light snow":
             self.fname = "../images/{description}.gif".format(description="snowy")
         else:
             self.fname = "../images/{description}.gif".format(description="sunny")
@@ -164,7 +172,7 @@ class SecondPage(tkinter.Frame):
     def add_widgets_colorized(self, weather_condition):
 
 
-        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast":
+        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
             hex_color = self.color_dict["cloudsGIF"]
             header = hex_color["header"]
             body = hex_color["body"]
@@ -174,19 +182,19 @@ class SecondPage(tkinter.Frame):
             header = hex_color["header"]
             body = hex_color["body"]
             
-        elif weather_condition == "Snowy" or weather_condition == "Snow":
+        elif weather_condition == "Snowy" or weather_condition == "Snow" or weather_condition == "light snow":
             hex_color = self.color_dict["snowyGIF"]
             
         else:
             hex_color = self.color_dict["sunnyGIF"] 
 
-        if hex_color is dict:
+        if type(hex_color) is dict:
 
             """SHOWS TITLE"""
             
-            weatherString = "Weather for {city} on {date}".format(city = master.getCity(), date = master.getDate())
+            weatherString = "Weather for {city} on {date}".format(city = self._user_city, date = self._user_date)
 
-            self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 17), bg=header)
+            self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 16), bg=header, fg="#ffffff")
             self.title_label.grid(row = 0, column = 2, pady=10)
 
 
@@ -200,7 +208,7 @@ class SecondPage(tkinter.Frame):
 
             """SHOWS COORDINATES"""
             coordString = "Coordinates ({la}, {lo})".format(la = lat, lo = lon)
-            self.coord_label = tkinter.Label(master = self, text = coordString, font = ("Tahoma", 14), bg=body)
+            self.coord_label = tkinter.Label(master = self, text = coordString, font = ("Tahoma", 14), bg=body, fg="#ffffff")
             self.coord_label.grid(row = 1, column = 2)
 
             condition = self.weather[3]
@@ -209,41 +217,41 @@ class SecondPage(tkinter.Frame):
 
             """SHOWS WEATHER DESCRIPTION"""
             descString = "Weather Description: {description}".format(description = condition)
-            self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 16), bg=body)
+            self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.description.grid(row = 2, column = 1, padx = 20)
 
             """SHOWS VISABILITY"""
-            vis = weather[4]
+            vis = self.weather[4]
             if vis >= 10:
                 visString = "Visability: {show_vis} miles".format(show_vis = vis)
             else: 
                 visString = "Visability: {show_vis} mile".format(show_vis = vis)
 
-            self.visability = tkinter.Label(master = self, text = visString, font = ("Tahoma", 16), bg=body)
+            self.visability = tkinter.Label(master = self, text = visString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.visability.grid(row = 3, column = 1, padx = 20)
 
             self.columnconfigure(index = 2, weight = 2)
 
             """SHOWS TEMPERATURE"""
-            ave_temp = weather[5]
+            ave_temp = self.weather[5]
             tempString = "Average temperature: {temp} \u00b0F".format(temp = ave_temp)
-            self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 16), bg=body)
+            self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.average.grid(row = 2, column = 3, pady = 5, padx = 20)
 
             """SHOWS MIN TEMP"""
-            min_temp = weather[6]
+            min_temp = self.weather[6]
             mintempString = "Minimum temperature: {min} \u00b0F".format(min = min_temp)
-            self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 16), bg=body)
+            self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.minimum.grid(row = 3, column = 3, pady = 5)
 
             """SHOWS MAX TEMP"""
-            max_temp = weather[7]
+            max_temp = self.weather[7]
             maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp, )
-            self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 16), bg=body)
+            self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.maximum.grid(row = 4, column = 3, pady = 5)
 
             """SHOWS WIND SPEED"""
-            windDes = weather[10]
+            windDes = self.weather[10]
             #windDes = ast.literal_eval(windDes[10])
             col_loc = windDes.find(":")
             com_loc = windDes.find(",")
@@ -255,17 +263,21 @@ class SecondPage(tkinter.Frame):
 
             # print(direction)
             _windSpeed = "Wind Speed: {_wind} mph".format(_wind = speed)
-            self._windspeed = tkinter.Label(master = self, text = _windSpeed, font = ("Tahoma", 16), bg=body)
+            self._windspeed = tkinter.Label(master = self, text = _windSpeed, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self._windspeed.grid(row = 4, column = 1, padx = 20)
 
             _windDeg = "Wind Direction: {_deg}".format(_deg = direction)
-            self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 16), bg=body)
+            self._windDeg = tkinter.Label(master = self, text = _windDeg, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self._windDeg.grid(row = 5, column = 1, padx = 20)
+        
         else:
 
             """SHOWS TITLE"""
+
+            # self._user_city
+            # self._user_date
             
-            weatherString = "Weather for {city} on {date}".format(city = master.getCity(), date = master.getDate())
+            weatherString = "Weather for {city} on {date}".format(city = self._user_city, date = self._user_date)
 
             self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 17), bg=hex_color)
             self.title_label.grid(row = 0, column = 2, pady=10)
@@ -294,7 +306,7 @@ class SecondPage(tkinter.Frame):
             self.description.grid(row = 2, column = 1, padx = 20)
 
             """SHOWS VISABILITY"""
-            vis = weather[4]
+            vis = self.weather[4]
             if vis >= 10:
                 visString = "Visability: {show_vis} miles".format(show_vis = vis)
             else: 
@@ -306,25 +318,25 @@ class SecondPage(tkinter.Frame):
             self.columnconfigure(index = 2, weight = 2)
 
             """SHOWS TEMPERATURE"""
-            ave_temp = weather[5]
+            ave_temp = self.weather[5]
             tempString = "Average temperature: {temp} \u00b0F".format(temp = ave_temp)
             self.average = tkinter.Label(master = self, text = tempString, font = ("Tahoma", 16), bg=hex_color)
             self.average.grid(row = 2, column = 3, pady = 5, padx = 20)
 
             """SHOWS MIN TEMP"""
-            min_temp = weather[6]
+            min_temp = self.weather[6]
             mintempString = "Minimum temperature: {min} \u00b0F".format(min = min_temp)
             self.minimum = tkinter.Label(master = self, text = mintempString, font = ("Tahoma", 16), bg=hex_color)
             self.minimum.grid(row = 3, column = 3, pady = 5)
 
             """SHOWS MAX TEMP"""
-            max_temp = weather[7]
+            max_temp = self.weather[7]
             maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp, )
             self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 16), bg=hex_color)
             self.maximum.grid(row = 4, column = 3, pady = 5)
 
             """SHOWS WIND SPEED"""
-            windDes = weather[10]
+            windDes = self.weather[10]
             #windDes = ast.literal_eval(windDes[10])
             col_loc = windDes.find(":")
             com_loc = windDes.find(",")
