@@ -1,7 +1,6 @@
 import backend
 import tkinter
 import ast
-# import PIL
 
 class WeatherApp(tkinter.Tk):
 
@@ -22,10 +21,7 @@ class WeatherApp(tkinter.Tk):
         self.title(window_name)
         self.geometry(window_size)  
 
-        # self.switchFrames(HomePage)
-
     def switchFrames(self, frame):
-
 
         if frame is SecondPage:
             try:
@@ -36,18 +32,15 @@ class WeatherApp(tkinter.Tk):
 
         self.frame.destroy()
 
-
         initFrame = frame(master=self)
         self.frame = initFrame
         self.frame.pack(fill="both", expand=True)
 
 
     def getCity(self):
-        # self.city = self.first.getSpinboxCity()
         return self.op_list[1]
 
     def getDate(self):
-        # self.date = self.first.getSpinboxDate()
         return self.op_list[0]
 
     def getop(self):
@@ -60,25 +53,19 @@ class WeatherApp(tkinter.Tk):
 class HomePage(tkinter.Frame):
 
     def __init__(self, master):
+        self.master = master
         tkinter.Frame.__init__(self, master=master, background="#42f4e5")
 
-        self.columnconfigure(index = 0, weight = 1)
-        #self.columnconfigure(index = 3, weight = 1)
-        self.columnconfigure(index = 4, weight = 1)
-        
-        #self.rowconfigure(index = 0, weight = 1)
-        self.rowconfigure(index = 1, weight = 1)
-        self.rowconfigure(index = 7, weight = 1)
-        self.rowconfigure(index = 6, weight = 2)
+        self.set_background()
 
-        self.fname = "../images/party.gif"
+        self.config_grid()
 
-        self.photo = tkinter.PhotoImage(file=self.fname)
+        self.add_widgets()
 
-        self.test_label = tkinter.Label(master=self, image=self.photo)
-        self.test_label.image = self.photo
-        self.test_label.place(x=0, y=0, relwidth=1, relheight=1)
-
+    def update_current_spinbox_data(self, event):
+        self.test = [self.date.get(), self.cities.get()]
+    
+    def add_widgets(self):
 
         self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20))
         self.home_label.grid(row=0, column=2, pady = 20)
@@ -89,15 +76,15 @@ class HomePage(tkinter.Frame):
         self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18))
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
-        self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: master.switchFrames(SecondPage))
+        self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: self.master.switchFrames(SecondPage))
         self.run_button.grid(row = 5, column = 2, pady = 20)
 
         selectCity = ("Wichita", "Chicago", "Miami")
-        self.cities = tkinter.Spinbox(master = self, values = selectCity, font = ("Tahoma", 16))
-        self.cities.grid(row = 3, column = 1)
 
-        
-        """ Creating List of dates, less complicated than trying to generate from database """
+        self.cities = tkinter.Spinbox(master = self, values = selectCity, font = ("Tahoma", 16))
+        self.cities.grid(row = 3, column = 1)     
+
+        # Creating List of dates
         date_list = []
 
         date_string = "{_month}-{_day}-2018"
@@ -113,11 +100,26 @@ class HomePage(tkinter.Frame):
         self.date.grid (row = 3, column = 3)
 
         self.cities.bind("<Leave>", self.update_current_spinbox_data)
-        self.date.bind("<Leave>", self.update_current_spinbox_data)
+        self.date.bind("<Leave>", self.update_current_spinbox_data)   
+    
+    def config_grid(self):
 
-    def update_current_spinbox_data(self, event):
-        self.test = [self.date.get(), self.cities.get()]
+        self.columnconfigure(index = 0, weight = 1)
+        self.columnconfigure(index = 4, weight = 1)
+        
+        self.rowconfigure(index = 1, weight = 1)
+        self.rowconfigure(index = 7, weight = 1)
+        self.rowconfigure(index = 6, weight = 2)
 
+    def set_background(self):
+
+        self.fname = "../images/party.gif"
+
+        self.photo = tkinter.PhotoImage(file=self.fname)
+
+        self.test_label = tkinter.Label(master=self, image=self.photo)
+        self.test_label.image = self.photo
+        self.test_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 class SecondPage(tkinter.Frame):
 
@@ -133,6 +135,11 @@ class SecondPage(tkinter.Frame):
         self.weather = master.database.get_weather(city_name=master.getCity(), user_date=master.getDate())
         
         condition = self.weather[3]
+
+        # stored data into database as string representation of python native type (in this case a dict)
+        # to easily extract the data out of the database (can't insert python dict into a sql database)
+        # that's where ast's literal_eval saves the day
+
         condition = ast.literal_eval(self.weather[3])
         condition = condition["description"]
 
@@ -141,6 +148,7 @@ class SecondPage(tkinter.Frame):
         self.add_widgets_colorized(condition)
 
 
+        # the "back button" is not inside of add_widgets_colorized bc it doesn't need its background changed
         """BACK BUTTON"""
         self.back = tkinter.Button(master = self, text = "Back", font = ("Tahoma", 17), relief = "sunken", command = lambda: master.switchFrames(HomePage))
         self.back.grid(row = 7, column = 2)
@@ -154,7 +162,7 @@ class SecondPage(tkinter.Frame):
         
         if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
             self.fname = "../images/{description}.gif".format(description="clouds")
-        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "Light Rain":
+        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "Light Rain" or weather_condition == "light rain":
             self.fname = "../images/{description}.gif".format(description="raining")
         elif weather_condition == "Snowy" or weather_condition == "Snow" or weather_condition == "light snow":
             self.fname = "../images/{description}.gif".format(description="snowy")
@@ -167,8 +175,6 @@ class SecondPage(tkinter.Frame):
         self.test_label.image = self.photo
         self.test_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-        # self.test_label.grid(row=10, column=0)
-
     def add_widgets_colorized(self, weather_condition):
 
 
@@ -177,7 +183,7 @@ class SecondPage(tkinter.Frame):
             header = hex_color["header"]
             body = hex_color["body"]
 
-        elif weather_condition == "Rainy" or weather_condition == "Rain":
+        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "light rain":
             hex_color = self.color_dict["rainingGIF"]
             header = hex_color["header"]
             body = hex_color["body"]
@@ -216,7 +222,8 @@ class SecondPage(tkinter.Frame):
             condition = condition["description"]
 
             """SHOWS WEATHER DESCRIPTION"""
-            descString = "Weather Description: {description}".format(description = condition)
+            
+            descString = "Weather Description: {description}".format(description = condition.title())
             self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.description.grid(row = 2, column = 1, padx = 20)
 
@@ -246,13 +253,12 @@ class SecondPage(tkinter.Frame):
 
             """SHOWS MAX TEMP"""
             max_temp = self.weather[7]
-            maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp, )
+            maxtempString = "Maximum temperature: {max} \u00b0F".format(max = max_temp) 
             self.maximum = tkinter.Label(master = self, text = maxtempString, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self.maximum.grid(row = 4, column = 3, pady = 5)
 
             """SHOWS WIND SPEED"""
             windDes = self.weather[10]
-            #windDes = ast.literal_eval(windDes[10])
             col_loc = windDes.find(":")
             com_loc = windDes.find(",")
             speed = windDes[col_loc+2:com_loc]
@@ -261,7 +267,6 @@ class SecondPage(tkinter.Frame):
             jr_col_loc = wind_junior.find(":")
             direction = wind_junior[jr_col_loc+3:-2]
 
-            # print(direction)
             _windSpeed = "Wind Speed: {_wind} mph".format(_wind = speed)
             self._windspeed = tkinter.Label(master = self, text = _windSpeed, font = ("Tahoma", 16), bg=body, fg="#ffffff")
             self._windspeed.grid(row = 4, column = 1, padx = 20)
@@ -274,9 +279,6 @@ class SecondPage(tkinter.Frame):
 
             """SHOWS TITLE"""
 
-            # self._user_city
-            # self._user_date
-            
             weatherString = "Weather for {city} on {date}".format(city = self._user_city, date = self._user_date)
 
             self.title_label = tkinter.Label(master = self, text = weatherString, font = ("Tahoma", 17), bg=hex_color)
@@ -337,7 +339,6 @@ class SecondPage(tkinter.Frame):
 
             """SHOWS WIND SPEED"""
             windDes = self.weather[10]
-            #windDes = ast.literal_eval(windDes[10])
             col_loc = windDes.find(":")
             com_loc = windDes.find(",")
             speed = windDes[col_loc+2:com_loc]
