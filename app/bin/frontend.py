@@ -356,11 +356,6 @@ class SecondPage(tkinter.Frame):
             self._windDeg.grid(row = 5, column = 1, padx = 20)
 
 
-
-
-
-
-
 test = WeatherApp(window_name="Fiesta Weather", window_size="800x350")
 # test = WeatherApp(window_name="Fiesta Weather", window_size="900x500")
 test.run()
