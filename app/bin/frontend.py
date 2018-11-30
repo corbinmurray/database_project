@@ -357,5 +357,5 @@ class SecondPage(tkinter.Frame):
 
 
 test = WeatherApp(window_name="Fiesta Weather", window_size="800x350")
-# test = WeatherApp(window_name="Fiesta Weather", window_size="900x500")
+
 test.run()
