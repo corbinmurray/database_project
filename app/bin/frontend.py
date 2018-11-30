@@ -67,13 +67,13 @@ class HomePage(tkinter.Frame):
     
     def add_widgets(self):
 
-        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20))
+        self.home_label = tkinter.Label(master=self, text="Welcome to Fiesta Weather!", justify = "center", font = ("Tahoma", 20), bg="#FFFFFF")
         self.home_label.grid(row=0, column=2, pady = 20)
 
-        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18))
+        self.city_label = tkinter.Label(master = self, text = "Pick Your City", font = ("Tahoma", 18), bg="#FFFFFF")
         self.city_label.grid(row = 2, column = 1)
 
-        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18))
+        self.date_label = tkinter.Label(master = self, text = "Choose A Date", font = ("Tahoma", 18), bg="#FFFFFF")
         self.date_label.grid(row = 2, column = 3, pady = 20)
 
         self.run_button = tkinter.Button(master = self, text = "Run", font = ("Tahoma", 18), relief = "sunken", command = lambda: self.master.switchFrames(SecondPage))
