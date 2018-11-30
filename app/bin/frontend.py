@@ -160,7 +160,7 @@ class SecondPage(tkinter.Frame):
  
     def insert_image(self, weather_condition):
         
-        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
+        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds" or weather_condition == "Haze" or weather_condition == "overcast clouds":
             self.fname = "../images/{description}.gif".format(description="clouds")
         elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "Light Rain" or weather_condition == "light rain":
             self.fname = "../images/{description}.gif".format(description="raining")
@@ -178,12 +178,12 @@ class SecondPage(tkinter.Frame):
     def add_widgets_colorized(self, weather_condition):
 
 
-        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds":
+        if weather_condition == "Cloudy" or weather_condition == "Partly Cloudy" or weather_condition == "Overcast" or weather_condition == "Mostly Cloudy" or weather_condition == "Scattered Clouds" or weather_condition == "Haze" or weather_condition == "overcast clouds":
             hex_color = self.color_dict["cloudsGIF"]
             header = hex_color["header"]
             body = hex_color["body"]
 
-        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "light rain":
+        elif weather_condition == "Rainy" or weather_condition == "Rain" or weather_condition == "light rain" or weather_condition == "Light Rain":
             hex_color = self.color_dict["rainingGIF"]
             header = hex_color["header"]
             body = hex_color["body"]
@@ -303,13 +303,13 @@ class SecondPage(tkinter.Frame):
             condition = condition["description"]
 
             """SHOWS WEATHER DESCRIPTION"""
-            descString = "Weather Description: {description}".format(description = condition)
+            descString = "Weather Description: {description}".format(description = condition.title())
             self.description = tkinter.Label(master = self, text = descString, font = ("Tahoma", 16), bg=hex_color)
             self.description.grid(row = 2, column = 1, padx = 20)
 
             """SHOWS VISABILITY"""
             vis = self.weather[4]
-            if vis >= 10:
+            if vis >= 2:
                 visString = "Visability: {show_vis} miles".format(show_vis = vis)
             else: 
                 visString = "Visability: {show_vis} mile".format(show_vis = vis)
