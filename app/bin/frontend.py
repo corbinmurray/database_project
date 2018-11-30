@@ -54,7 +54,7 @@ class HomePage(tkinter.Frame):
 
     def __init__(self, master):
         self.master = master
-        tkinter.Frame.__init__(self, master=master, background="#42f4e5")
+        tkinter.Frame.__init__(self, master=master)
 
         self.set_background()
 
