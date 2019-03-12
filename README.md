@@ -4,4 +4,4 @@ The application involved gathering data from a website -- specifically, the weat
 Once the data was gathered it was stored in a SQL database. 
 Then, a GUI was created to query the database and display the information accordingly.
 
-![home-screen]("Screenshots/home-screen.png")
+![home-screen](Screenshots/home-screen.png)
